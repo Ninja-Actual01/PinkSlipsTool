@@ -12,93 +12,93 @@ public class M27StarCalculator
         if (wins >= 1)
         {
             stars += 2;
-            bonuses.Add(""Win the Game (+2)"");
+            bonuses.Add("WIN THE GAME (+2)");
         }
 
         if (margin >= 21)
         {
             stars += 2;
-            bonuses.Add(""Win by 21+ (+2)"");
+            bonuses.Add("WIN BY 21+ (+2)");
         }
         else if (margin >= 14)
         {
-            stars += 2;
-            bonuses.Add(""Win by 14+ (+2)"");
+            stars += 1;
+            bonuses.Add("WIN BY 14+ (+1)");
         }
 
         if (shutout)
         {
-            stars += 4;
-            bonuses.Add(""0 Points Allowed (+4)"");
+            stars += 2;
+            bonuses.Add("0 PTS ALLOWED (+2)");
         }
 
         if (passYds >= 300)
         {
-            stars += 2;
-            bonuses.Add(""300+ Pass Yards (+2)"");
+            stars += 1;
+            bonuses.Add("300 PASS YARDS (+1)");
         }
         if (rushYds >= 100)
         {
-            stars += 2;
-            bonuses.Add(""100+ Rush Yards (+2)"");
+            stars += 1;
+            bonuses.Add("100 RUSH YARDS (+1)");
         }
         if (recYds >= 100)
         {
-            stars += 2;
-            bonuses.Add(""100+ Rec Yards (+2)"");
+            stars += 1;
+            bonuses.Add("100 REC YARDS (+1)");
         }
         if (passTd >= 3)
         {
-            stars += 4;
-            bonuses.Add(""3+ Pass TDs (+4)"");
+            stars += 1;
+            bonuses.Add("3 PASS TD (+1)");
         }
         if (rushTd >= 2)
         {
-            stars += 2;
-            bonuses.Add(""2+ Rush TDs (+2)"");
+            stars += 1;
+            bonuses.Add("2 RUSH TD (+1)");
         }
         if (recTd >= 2)
         {
-            stars += 2;
-            bonuses.Add(""2+ Rec TDs (+2)"");
+            stars += 1;
+            bonuses.Add("2 REC TD (+1)");
         }
 
         if (sacks >= 2)
         {
-            stars += 2;
-            bonuses.Add(""2+ Sacks (+2)"");
+            stars += 1;
+            bonuses.Add("2 SACKS (+1)");
         }
         if (ints >= 1)
         {
-            stars += 2;
-            bonuses.Add(""1+ INT (+2)"");
+            stars += 1;
+            bonuses.Add("1 INT (+1)");
         }
         if (defTd >= 1)
         {
-            stars += 6;
-            bonuses.Add(""Def/ST TD (+6)"");
+            stars += 2;
+            bonuses.Add("DEF TD (+2)");
         }
         if (wonTurnover)
         {
-            stars += 2;
-            bonuses.Add(""Won Turnover Margin (+2)"");
+            stars += 1;
+            bonuses.Add("WIN TURNOVER +/- (+1)");
         }
         if (divisional)
         {
             stars += 2;
-            bonuses.Add(""Divisional Win (+2)"");
+            bonuses.Add("WIN DIVISIONAL GAME (+2)");
         }
         if (tfl >= 3)
         {
-            stars += 2;
-            bonuses.Add(""3+ TFL (+2)"");
+            stars += 1;
+            bonuses.Add("3 TFL (+1)");
         }
         if (gongs >= 2)
         {
-            stars += 2;
-            bonuses.Add(""x2 Gongs (+2)"");
+            stars += 1;
+            bonuses.Add("x2 GONGS (+1)");
         }
 
-        return new StarCalculation { TotalStars = stars, Bonuses = bonuses };
+        return new StarCalculation { TotalStars = stars, Bonuses = bonuses, ConditionsMet = bonuses };
     }
 }

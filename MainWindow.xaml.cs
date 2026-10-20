@@ -18,6 +18,10 @@ public partial class MainWindow : Window
         InitializeComponent();
         _vm = new MainViewModel();
         DataContext = _vm;
+        _vm.PropertyChanged += (s, e) => {
+            if (e.PropertyName == nameof(MainViewModel.GameType))
+                WheelPanelControl.GameType = _vm.GameType;
+        };
         _vm.SaveCompleted += OnSaveCompleted;
 
         // Keep the window on-screen regardless of display scaling: clamp to the work area.
@@ -41,6 +45,11 @@ public partial class MainWindow : Window
     private void WheelPanel_PerkApplied(PerkDef perk)
     {
         _vm?.ApplyWheelPerk(perk);
+    }
+
+    protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
     }
 
     private void OnSaveCompleted(object sender, string message)

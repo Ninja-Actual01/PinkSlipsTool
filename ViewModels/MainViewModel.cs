@@ -16,11 +16,39 @@ public class MainViewModel : INotifyPropertyChanged
         => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
     private readonly StarCalculator _calculator = new();
+    private readonly M27StarCalculator _m27Calculator = new();
     private readonly PerkManager _perks = new();
     private DynastyFile _dynasty;
     private StarCalculation _lastCalc;
 
-    public List<PerkDef> AvailablePerks => PerkManager.DefaultPerks;
+    public List<PerkDef> AvailablePerks => GameType == GameType.Madden27 ? M27Perks.WheelPerksM27 : PerkManager.DefaultPerks;
+
+    private GameType _gameType = GameType.Unknown;
+    public GameType GameType
+    {
+        get => _gameType;
+        set { _gameType = value; OnPropertyChanged(); OnPropertyChanged(nameof(AvailablePerks)); }
+    }
+
+    public string[] GameTypeOptions => new[] { "Auto", "CFB 27", "Madden 27" };
+    
+    private int _gameTypeIndex = 0;
+    public int GameTypeIndex
+    {
+        get => _gameTypeIndex;
+        set
+        {
+            _gameTypeIndex = value;
+            OnPropertyChanged();
+            GameType = value switch
+            {
+                1 => GameType.CFB27,
+                2 => GameType.Madden27,
+                _ => GameType
+            };
+            OnPropertyChanged(nameof(AvailablePerks));
+        }
+    }
 
     private int _starsEarned;
     public int StarsEarned
@@ -203,10 +231,20 @@ public class MainViewModel : INotifyPropertyChanged
 
     public void CalculateStars()
     {
-        _lastCalc = _calculator.Calculate(
-            YourScore, OpponentScore, TurnoverDiff,
-            PassYards, PassTDs, RushYards, RushTDs,
-            RecYards, RecTDs, Sacks, Ints, DefTDs, StTDs);
+        if (GameType == GameType.Madden27)
+        {
+            int margin = YourScore - OpponentScore;
+            bool shutout = OpponentScore == 0;
+            _lastCalc = _m27Calculator.Calculate(1, margin, shutout, PassYards, RushYards, RecYards,
+                PassTDs, RushTDs, RecTDs, Sacks, Ints, DefTDs, TurnoverDiff > 0, false, 0, 0);
+        }
+        else
+        {
+            _lastCalc = _calculator.Calculate(
+                YourScore, OpponentScore, TurnoverDiff,
+                PassYards, PassTDs, RushYards, RushTDs,
+                RecYards, RecTDs, Sacks, Ints, DefTDs, StTDs);
+        }
 
         StarsEarned = _lastCalc.TotalStars;
         IsPerfectGame = _lastCalc.PerfectGame;
@@ -316,7 +354,14 @@ public class MainViewModel : INotifyPropertyChanged
             IsDynastyLoaded = true;
             _perks.DynastyFile = _dynasty;
 
-            SetStatus($"Loaded: {DynastyFileName} ({TableCount} tables)  |  Backup created");
+            var detected = GameSchemas.DetectGameType(_dynasty);
+            if (_gameTypeIndex == 0 && detected != GameType.Unknown)
+                GameType = detected;
+            else if (_gameTypeIndex == 1) GameType = GameType.CFB27;
+            else if (_gameTypeIndex == 2) GameType = GameType.Madden27;
+            OnPropertyChanged(nameof(AvailablePerks));
+
+            SetStatus($"Loaded: {DynastyFileName} ({TableCount} tables) | Game: {GameType}  |  Backup created");
             OnPropertyChanged(nameof(FileStatus));
         }
         catch (Exception ex)

@@ -16,14 +16,10 @@ public partial class WheelPanel : UserControl
     private bool _hasSpun;
     private int _selectedIndex = -1;
 
-    private static readonly List<PerkDef> WheelPerks = PerkManager.WheelPerks;
-
-    // Weight per perk index (matches WheelPerks order): higher = bigger slice =
-    // more likely to land there. Penalties (Dev Down, Shock, Illness, Ineligible,
-    // Retire) are weighted heavier; the big rewards are rare.
-    private static readonly int[] SliceWeights = { 1, 2, 5, 1, 4, 5, 4, 4, 2, 2, 4, 3 };
-    private static readonly double[] SliceAngles = ComputeSliceAngles();
-    private static readonly int TotalWeight = SliceWeights.Sum();
+    private List<PerkDef> WheelPerks;
+    private int[] SliceWeights;
+    private double[] SliceAngles;
+    private int TotalWeight;
 
     private static double[] ComputeSliceAngles()
     {
@@ -66,11 +62,41 @@ public partial class WheelPanel : UserControl
         panel.UpdateEnabled();
     }
 
+    private GameType _gameType = GameType.CFB27;
+
+    public GameType GameType
+    {
+        get => _gameType;
+        set
+        {
+            _gameType = value;
+            InitializeWheelData();
+            DrawWheel();
+        }
+    }
+
     public WheelPanel()
     {
+        InitializeWheelData();
         InitializeComponent();
         DrawWheel();
         UpdateEnabled();
+    }
+
+    private void InitializeWheelData()
+    {
+        if (_gameType == GameType.Madden27)
+        {
+            WheelPerks = M27Perks.WheelPerksM27;
+            SliceWeights = new int[] { 3, 4, 1, 2, 2, 4 };
+        }
+        else
+        {
+            WheelPerks = PerkManager.WheelPerks;
+            SliceWeights = new int[] { 1, 2, 5, 1, 4, 5, 4, 4, 2, 2, 4, 3 };
+        }
+        TotalWeight = SliceWeights.Sum();
+        SliceAngles = SliceWeights.Select(w => 360.0 * w / TotalWeight).ToArray();
     }
 
     private void UpdateEnabled()
