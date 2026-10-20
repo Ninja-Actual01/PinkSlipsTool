@@ -257,8 +257,11 @@
                 FontSize="12" Padding="12,5" Height="30"
                 Command="{Binding LoadDynastyCommand}" />
 
-        <TextBlock Grid.Column="1" Text="{Binding FileStatus}" Foreground="#888"
-                   FontSize="11" VerticalAlignment="Center" Margin="10,0" TextTrimming="CharacterEllipsis" />
+        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0">
+          <TextBlock Text="Game:" Foreground="#AAA" FontSize="11" VerticalAlignment="Center" Margin="0,0,4,0" />
+          <ComboBox Width="100" Height="26" SelectedIndex="{Binding GameTypeIndex}" ItemsSource="{Binding GameTypeOptions}" VerticalAlignment="Center" />
+          <TextBlock Text="{Binding FileStatus}" Foreground="#888" FontSize="11" VerticalAlignment="Center" Margin="10,0,0,0" TextTrimming="CharacterEllipsis" />
+        </StackPanel>
 
         <Button Grid.Column="2" Content="{Binding SaveButtonText}" Style="{StaticResource SecondaryButton}"
                 Background="#555" Height="30" Margin="0,0,4,0"
