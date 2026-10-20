@@ -2,7 +2,7 @@ namespace PinkSlipsTool.Models;
 
 public static class PlayerTableInfo
 {
-    public const int TableId = 4248;
+    public static int TableId { get; set; } = 4248;
 
     // Offset-table positions verified against the CFB25 (C27) save schema
     // (assetId 6494552). Fields are read from the packed (repacked) record layout.

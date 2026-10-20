@@ -21,9 +21,9 @@ public partial class PinkSlipsWheelPopup : Window
     private int TotalWeight;
     private readonly GameType _gameType;
 
-    private static double[] ComputeSliceAngles()
+    private double[] ComputeSliceAngles()
     {
-        var total = SliceWeights.Sum();
+        var total = TotalWeight;
         return SliceWeights.Select(w => 360.0 * w / total).ToArray();
     }
 

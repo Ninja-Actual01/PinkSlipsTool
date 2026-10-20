@@ -91,7 +91,13 @@ public class DynastyEditor
     {
         _dynasty = dynasty;
         _playerTable = dynasty.GetTable(PlayerTableInfo.TableId);
-        _teamTable = dynasty.GetTable(6311);
+        if (dynasty.GetTable(5934) != null)
+            _teamTable = dynasty.GetTable(5934);
+        else if (dynasty.GetTable(6311) != null)
+            _teamTable = dynasty.GetTable(6311);
+        else
+            _teamTable = null;
+
         _coachTable = dynasty.GetTable(4176);
         _seasonWeekTable = dynasty.GetTable(PlayerTableInfo.CurrentWeekTableId);
         _seasonYearTable = dynasty.GetTable(PlayerTableInfo.CurrentYearTableId);

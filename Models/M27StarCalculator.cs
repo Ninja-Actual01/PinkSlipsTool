@@ -99,6 +99,6 @@ public class M27StarCalculator
             bonuses.Add("x2 GONGS (+1)");
         }
 
-        return new StarCalculation { TotalStars = stars, Bonuses = bonuses, ConditionsMet = bonuses };
+        return new StarCalculation { TotalStars = stars, ConditionsMet = bonuses };
     }
 }

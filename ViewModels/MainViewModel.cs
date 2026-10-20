@@ -23,7 +23,7 @@ public class MainViewModel : INotifyPropertyChanged
 
     public List<PerkDef> AvailablePerks => GameType == GameType.Madden27 ? M27Perks.WheelPerksM27 : PerkManager.DefaultPerks;
 
-    private GameType _gameType = GameType.Unknown;
+    private GameType _gameType = GameType.CFB27;
     public GameType GameType
     {
         get => _gameType;
@@ -40,12 +40,13 @@ public class MainViewModel : INotifyPropertyChanged
         {
             _gameTypeIndex = value;
             OnPropertyChanged();
-            GameType = value switch
+            var newType = value switch
             {
                 1 => GameType.CFB27,
                 2 => GameType.Madden27,
                 _ => GameType
             };
+            GameType = newType;
             OnPropertyChanged(nameof(AvailablePerks));
         }
     }
@@ -285,11 +286,16 @@ public class MainViewModel : INotifyPropertyChanged
         {
             case "Steal Player":
             case "Double Steal":
+            case "Any Player (League)":
+            case "Any Player (Opponent)":
+            case "Steal from League":
+            case "Steal from Opponent":
                 ShowDialog(new StealPlayerPopup(_dynasty));
                 if (perk.Name == "Double Steal")
                     ShowDialog(new StealPlayerPopup(_dynasty));
                 break;
             case "Dev Upgrade":
+            case "Dev Trait Increase":
                 ShowDialog(new DevUpgradePopup(_dynasty));
                 break;
             case "Dev Downgrade":
@@ -318,6 +324,14 @@ public class MainViewModel : INotifyPropertyChanged
                 break;
             case "FA Sign":
                 ShowDialog(new FreeAgentPopup(_dynasty));
+                break;
+            case "Monstars (1 Skill)":
+                ShowDialog(new DevUpgradePopup(_dynasty));
+                break;
+            case "+10 Win Bonus":
+            case "Orange Juice (+2)":
+                // These are honor-system/manual edits as described
+                MessageBox.Show($"{perk.Name}\n\nManually apply this edit to your franchise file as needed.", "Pink Slips", MessageBoxButton.OK, MessageBoxImage.Information);
                 break;
         }
     }
@@ -359,9 +373,14 @@ public class MainViewModel : INotifyPropertyChanged
                 GameType = detected;
             else if (_gameTypeIndex == 1) GameType = GameType.CFB27;
             else if (_gameTypeIndex == 2) GameType = GameType.Madden27;
+            if (GameType == GameType.Madden27)
+                PlayerTableInfo.TableId = 4236;
+            else
+                PlayerTableInfo.TableId = 4248;
             OnPropertyChanged(nameof(AvailablePerks));
 
-            SetStatus($"Loaded: {DynastyFileName} ({TableCount} tables) | Game: {GameType}  |  Backup created");
+            var tableInfo = string.Join(", ", _dynasty.Tables.Take(10).Select(t => t.Header.TableId.ToString()));
+            SetStatus($"Loaded: {DynastyFileName} ({TableCount} tables) | IDs: {tableInfo}{(_dynasty.Tables.Count > 10 ? "..." : "")} | Game: {GameType}  |  Backup created");
             OnPropertyChanged(nameof(FileStatus));
         }
         catch (Exception ex)

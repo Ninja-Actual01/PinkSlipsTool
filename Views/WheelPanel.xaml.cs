@@ -21,9 +21,9 @@ public partial class WheelPanel : UserControl
     private double[] SliceAngles;
     private int TotalWeight;
 
-    private static double[] ComputeSliceAngles()
+    private double[] ComputeSliceAnglesInternal()
     {
-        var total = SliceWeights.Sum();
+        var total = TotalWeight;
         return SliceWeights.Select(w => 360.0 * w / total).ToArray();
     }
 
