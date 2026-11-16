@@ -10,10 +10,8 @@ dynasty save file directly — steal players, upgrade dev traits, and more.
 ## Requirements
 
 - **Windows 10/11** (x64)
-- No install needed. Run the self-contained exe:
-  - `C:\Users\<you>\Documents\Mods\PinkSlipsTool\PinkSlipsTool.exe`
-  - (or any copy of the single-file build)
-- Dynasty saves live in `C:\Users\<you>\Documents\EA SPORTS College Football 27\saves\`
+- No install required for release builds: download and run the self-contained `PinkSlipsTool.exe` from the latest GitHub release.
+- Dynasty saves are typically located at `Documents\EA SPORTS College Football 27\saves\`.
 
 ---
 
@@ -184,18 +182,19 @@ These open from perks once a dynasty file is loaded.
 
 ---
 
-## Building from Source
+## Development
+
+See [DEV_NOTES.md](DEV_NOTES.md) for contributor/build notes and project structure.
+
+### Building from source
 
 ```powershell
-dotnet publish -c Release -r win-x64 --self-contained true \
-  -p:PublishSingleFile=true -o .\publish
+dotnet restore
+dotnet build -c Release
+dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o .\publish
 ```
 
-Output: a single `PinkSlipsTool.exe` (~67 MB) in `.\publish`. No .NET runtime install needed on
-target machines.
-
-- `.NET 10 SDK` is required to build.
-- `PinkSlipsTool.ico` and `Images\*` must stay in the project root / `Images\` folder.
+Output: a single `PinkSlipsTool.exe` in `.\publish` (self-contained). Ensure the required .NET SDK for this project is installed and keep `PinkSlipsTool.ico` and `Images\*` in place.
 
 ---
 
